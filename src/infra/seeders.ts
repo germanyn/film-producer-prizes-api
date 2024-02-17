@@ -1,12 +1,15 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { Movie } from '../modules/movies/models/Movie'
+import { Producer } from '../modules/movies/models/Producer'
+import { AppDataSource } from './database'
 
 const SEED_PATH = path.join('seeds/movielist.csv')
 
 export async function seedMoviesByCsv() {
     try {
         await Movie.clear()
+        await Producer.clear()
     } catch (error) {
         throw new Error("Couldn't clear movies data for seeding", {
             cause: error,
@@ -30,28 +33,47 @@ export async function seedMoviesByCsv() {
         ...rows
     ] = csvContent.split('\n')
 
-    const moviesBeingCreated = rows
+    const producers = new Map<string, Producer>()
+
+    const movies = rows
         .filter(Boolean)
-        .map(async row => {
+        .map(row => {
             const [
                 year,
                 title,
                 studios,
-                producers,
+                producersNames,
                 winner,
             ] = row.split(';')
+            
+            const movieProducers = parseHumanizedListColumn(producersNames)
+                .map(name => {
+                    const producer = producers.get(name) || Producer.create({ name })
+
+                    producers.set(name, producer)
+
+                    return producer
+                })
 
             const movie = Movie.create({
                 year: Number(year),
                 title,
                 studios: parseHumanizedListColumn(studios),
-                producers: parseHumanizedListColumn(producers),
                 winner: winner === 'yes' ? true : false,
+                producers: movieProducers,
             })
-            return movie.save()
+
+            return movie
         })
 
-    await Promise.all(moviesBeingCreated)
+    await AppDataSource.manager.transaction(async (transactionManager) => {
+        const savedProducers = await transactionManager.save(Array.from(producers.values()))
+        movies.forEach(movie => {
+            movie.producers = movie.producers
+                .map(producer => savedProducers.find(saved => saved.name === producer.name)!)
+        })
+        await transactionManager.save(movies)
+    })
 }
 
 function parseHumanizedListColumn(column: string) {

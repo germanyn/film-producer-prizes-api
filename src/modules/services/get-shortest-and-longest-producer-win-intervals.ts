@@ -1,31 +1,20 @@
 import { Movie } from "../movies/models/Movie"
+import { Producer } from "../movies/models/Producer"
 
 export async function getShortestAndLongestProducerWinIntervals() {
     // only awarded movies
-    const movies = await Movie.findBy({
-        winner: true,
+    const producers = await Producer.find({
+        relations: ['movies']
     })
 
-    const moviesByProducer = new Map<string, Movie[]>()
-
-    movies.forEach(movie => {
-        movie.producers.forEach(producer => {
-            const producerMovies = moviesByProducer.get(producer) || []
-            moviesByProducer.set(producer, [
-                ...producerMovies,
-                movie,
-            ])
-        })
-    })
-
-    const producersIntervals = Array
-        .from(moviesByProducer.entries())
-        .flatMap(([producer, movies]) => {
-            return calculateNeighborMoviesInterval(movies)
+    const producersIntervals = producers
+        .flatMap(producer => {
+            const winnerMovies = producer.movies.filter(({ winner }) => winner)
+            return calculateNeighborMoviesInterval(winnerMovies)
                 .map(moviesInterval => {
                     return {
                         ...moviesInterval,
-                        producer,
+                        producer: producer.name,
                     }
                 })
         })

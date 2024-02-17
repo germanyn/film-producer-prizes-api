@@ -1,13 +1,14 @@
 import { Movie } from "../movies/models/Movie"
+import { Producer } from "../movies/models/Producer";
 import { type ProducerIntervalInformation, getShortestAndLongestProducerWinIntervals } from "./get-shortest-and-longest-producer-win-intervals";
 
 jest.mock("../movies/models/Movie")
 
-const mockedMovie = jest.mocked(Movie)
+const mockedProducer = jest.mocked(Producer)
 
 describe('getShortestAndLongestProducerWinIntervals', () => {
     it('works when has no movies', async () => {
-        jest.spyOn(mockedMovie, 'findBy').mockResolvedValueOnce([])
+        jest.spyOn(mockedProducer, 'find').mockResolvedValueOnce([])
         
         const result = await getShortestAndLongestProducerWinIntervals()
 
@@ -18,17 +19,20 @@ describe('getShortestAndLongestProducerWinIntervals', () => {
     })
 
     it('returns a producer for min and max intervals', async () => {
-        const SAMPLE_MOVIES: Movie[] = [
-            buildSampleMovie({
-                producers: ['Steven Spielberg'],
-                title: 'E.T.',
-                year: 1982
-            }),
-            buildSampleMovie({
-                producers: ['Steven Spielberg'],
-                title: 'Jaws',
-                year: 1975,
-            }),
+        const SAMPLE_PRODUCERS: Producer[] = [
+            buildSampleProducer({
+                name: 'Steven Spielberg',
+                movies: [
+                    buildSampleWinnerMovie({
+                        title: 'E.T.',
+                        year: 1982
+                    }),
+                    buildSampleWinnerMovie({
+                        title: 'Jaws',
+                        year: 1975,
+                    }),
+                ]
+            })
         ]
 
         const stevenInterval: ProducerIntervalInformation = {
@@ -38,7 +42,7 @@ describe('getShortestAndLongestProducerWinIntervals', () => {
             interval: 7,
         }
 
-        jest.spyOn(mockedMovie, 'findBy').mockResolvedValueOnce(SAMPLE_MOVIES)
+        jest.spyOn(mockedProducer, 'find').mockResolvedValueOnce(SAMPLE_PRODUCERS)
         
         const result = await getShortestAndLongestProducerWinIntervals()
 
@@ -49,26 +53,32 @@ describe('getShortestAndLongestProducerWinIntervals', () => {
     })
 
     it('returns correct producers for min and max', async () => {
-        const SAMPLE_MOVIES: Movie[] = [
-            buildSampleMovie({
-                producers: ['Steven Spielberg'],
-                title: 'E.T.',
-                year: 1982
+        const SAMPLE_PRODUCERS: Producer[] = [
+            buildSampleProducer({
+                name: 'Steven Spielberg',
+                movies: [
+                    buildSampleWinnerMovie({
+                        title: 'E.T.',
+                        year: 1982
+                    }),
+                    buildSampleWinnerMovie({
+                        title: 'Jaws',
+                        year: 1975,
+                    }),
+                ]
             }),
-            buildSampleMovie({
-                producers: ['Steven Spielberg'],
-                title: 'Jaws',
-                year: 1975,
-            }),
-            buildSampleMovie({
-                producers: ['George Lucas'],
-                title: 'Star Wars: Episode IV - A New Hope',
-                year: 1977,
-            }),
-            buildSampleMovie({
-                producers: ['George Lucas'],
-                title: 'Raiders of the Lost Ark',
-                year: 1981,
+            buildSampleProducer({
+                name: 'George Lucas',
+                movies: [
+                    buildSampleWinnerMovie({
+                        title: 'Star Wars: Episode IV - A New Hope',
+                        year: 1977,
+                    }),
+                    buildSampleWinnerMovie({
+                        title: 'Raiders of the Lost Ark',
+                        year: 1981,
+                    }),
+                ]
             }),
         ]
 
@@ -86,7 +96,7 @@ describe('getShortestAndLongestProducerWinIntervals', () => {
             interval: 4,
         }
 
-        jest.spyOn(mockedMovie, 'findBy').mockResolvedValueOnce(SAMPLE_MOVIES)
+        jest.spyOn(mockedProducer, 'find').mockResolvedValueOnce(SAMPLE_PRODUCERS)
         
         const result = await getShortestAndLongestProducerWinIntervals()
 
@@ -97,26 +107,32 @@ describe('getShortestAndLongestProducerWinIntervals', () => {
     })
 
     it('repeat producer with same interval', async () => {
-        const SAMPLE_MOVIES: Movie[] = [
-            buildSampleMovie({
-                producers: ['Steven Spielberg'],
-                title: 'E.T.',
-                year: 1982
+        const SAMPLE_PRODUCERS: Producer[] = [
+            buildSampleProducer({
+                name: 'Steven Spielberg',
+                movies: [
+                    buildSampleWinnerMovie({
+                        title: 'E.T.',
+                        year: 1982
+                    }),
+                    buildSampleWinnerMovie({
+                        title: 'Jaws',
+                        year: 1975,
+                    }),
+                ]
             }),
-            buildSampleMovie({
-                producers: ['Steven Spielberg'],
-                title: 'Jaws',
-                year: 1975,
-            }),
-            buildSampleMovie({
-                producers: ['George Lucas'],
-                title: 'Star Wars: Episode IV - A New Hope',
-                year: 1970,
-            }),
-            buildSampleMovie({
-                producers: ['George Lucas'],
-                title: 'Raiders of the Lost Ark',
-                year: 1977,
+            buildSampleProducer({
+                name: 'George Lucas',
+                movies: [
+                    buildSampleWinnerMovie({
+                        title: 'Star Wars: Episode IV - A New Hope',
+                        year: 1970,
+                    }),
+                    buildSampleWinnerMovie({
+                        title: 'Raiders of the Lost Ark',
+                        year: 1977,
+                    }),
+                ]
             }),
         ]
 
@@ -134,7 +150,7 @@ describe('getShortestAndLongestProducerWinIntervals', () => {
             interval: 7,
         }
 
-        jest.spyOn(mockedMovie, 'findBy').mockResolvedValueOnce(SAMPLE_MOVIES)
+        jest.spyOn(mockedProducer, 'find').mockResolvedValueOnce(SAMPLE_PRODUCERS)
         
         const result = await getShortestAndLongestProducerWinIntervals()
 
@@ -145,12 +161,21 @@ describe('getShortestAndLongestProducerWinIntervals', () => {
     })
 })
 
-function buildSampleMovie(movie: Partial<Movie>): Movie {
+
+function buildSampleProducer(producer: Partial<Producer>): Producer {
     // @ts-expect-error: simpler for testing
     return {
-        title: 'Title Name',
-        producers: ['Producer Name'],
+        name: 'Producer Name',
+        ...producer,
+    }
+}
+
+function buildSampleWinnerMovie(movie: Partial<Movie>): Movie {
+    // @ts-expect-error: simpler for testing
+    return {
+        title: 'Movie Name',
         year: 1990,
+        winner: true,
         ...movie,
     }
 }

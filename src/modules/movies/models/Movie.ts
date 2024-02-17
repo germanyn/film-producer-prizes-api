@@ -1,4 +1,5 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { BaseEntity, Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm'
+import { Producer } from './Producer'
 
 @Entity()
 export class Movie extends BaseEntity {
@@ -14,8 +15,11 @@ export class Movie extends BaseEntity {
     @Column('simple-array')
     studios!: string[]
 
-    @Column('simple-array')
-    producers!: string[]
+    @ManyToMany(() => Producer, producer => producer.movies, {
+        cascade: true,
+    })
+    @JoinTable({ name: 'producer_movies' })
+    producers!: Producer[]
 
     @Column({ default: false })
     winner!: boolean
