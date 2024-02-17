@@ -6,7 +6,7 @@ import { AppDataSource } from '../../infra/database'
 let app!: Express
 
 describe('Movies Module', () => {
-    beforeEach(async () => {
+    beforeAll(async () => {
         app = await setupApplication()
     })
 
@@ -27,7 +27,7 @@ describe('Movies Module', () => {
         })
     })
 
-    afterEach(async () => {
+    afterAll(async () => {
         await AppDataSource.destroy()
     })
 })
