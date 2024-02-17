@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { getShortestAndLongestProducerWinIntervals } from '../services/get-shortest-and-longest-producer-win-intervals'
+import { getShortestAndLongestProducerWinIntervals } from './services/get-shortest-and-longest-producer-win-intervals'
 
 const router = Router()
 

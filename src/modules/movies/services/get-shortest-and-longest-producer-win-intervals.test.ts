@@ -1,8 +1,8 @@
-import { Movie } from "../movies/models/Movie"
-import { Producer } from "../movies/models/Producer";
+import { Movie } from "../models/Movie"
+import { Producer } from "../models/Producer";
 import { type ProducerIntervalInformation, getShortestAndLongestProducerWinIntervals } from "./get-shortest-and-longest-producer-win-intervals";
 
-jest.mock("../movies/models/Movie")
+jest.mock("../models/Movie")
 
 const mockedProducer = jest.mocked(Producer)
 

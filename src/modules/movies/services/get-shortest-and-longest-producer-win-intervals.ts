@@ -1,5 +1,5 @@
-import { Movie } from "../movies/models/Movie"
-import { Producer } from "../movies/models/Producer"
+import { Movie } from "../models/Movie"
+import { Producer } from "../models/Producer"
 
 export async function getShortestAndLongestProducerWinIntervals() {
     // only awarded movies
