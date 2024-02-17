@@ -68,7 +68,3 @@ interface MovieInterval {
     previousWin: number
     followingWin: number
 }
-
-function isNotEmpty<T>(value: T | null | undefined): value is T {
-    return !!value
-}
