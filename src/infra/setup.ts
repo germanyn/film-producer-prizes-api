@@ -7,6 +7,8 @@ import { movieRouter } from '../modules/movies/routes'
 export async function setupApplication() {
     await AppDataSource.initialize()
 
+    await AppDataSource.synchronize(true)
+
     await seedMoviesByCsv()
 
     const application = express()
