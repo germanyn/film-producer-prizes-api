@@ -1,13 +1,13 @@
-import express from 'express'
-
-const app = express()
+import { setupApplication } from "./infra/setup"
 
 const PORT = 6346
 
-app.get('', (_, res) => {
-    res.send('API is running')
-})
+async function runApplication() {
+    const app = await setupApplication()
 
-app.listen(PORT, () => {
-    console.log(`Listening on http://localhost:${PORT}`)
-})
+    app.listen(PORT, () => {
+        console.log(`Listening on http://localhost:${PORT}`)
+    })
+}
+
+runApplication()

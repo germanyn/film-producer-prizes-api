@@ -1,1 +1,7 @@
 node_modules
+
+seeds/**
+!seeds/.gitkeep
+
+database/**
+!database/.gitkeep
