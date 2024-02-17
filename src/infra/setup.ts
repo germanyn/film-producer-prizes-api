@@ -2,7 +2,7 @@ import 'reflect-metadata'
 import express from 'express'
 import { AppDataSource } from './database'
 import { seedMoviesByCsv } from './seeders'
-import { movieRouter } from '../modules/movies/routes'
+import { movieRouter } from '../modules/movies/routes/movie-router'
 
 export async function setupApplication() {
     await AppDataSource.initialize()
