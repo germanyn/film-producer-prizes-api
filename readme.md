@@ -112,6 +112,18 @@ npm run test -- --watch
 }
 ```
 
+### GET /v2/producer-intervals-summary
+
+**Description**: Same as `GET /producer-intervals-summary` but uses SQL as query solution (instead of JS script).
+
+**Request Parameters**:
+- None
+
+**Response**:
+- Status Code: 200 OK
+- Content-Type: `application/json`
+- Body: Same as `GET /producer-intervals-summary`
+
 ## Architecture
 
 The project uses a mix of Layered Architecture and Component-Based Architecture.
@@ -126,7 +138,9 @@ The project uses a mix of Layered Architecture and Component-Based Architecture.
 Tests runs with a different variable at `.env.test`.
 
 The application has integration tests:
-1. Application health check at `application-integration.test.ts`
-2. Movie related routes at `movies-integration.test.ts`
+- `application-integration.test.ts`: Application health check
+- `movies-integration.test.ts`: Movie related routes
 
-Additionally, there is a unit test that assisted in implementing the proposed application requirement: `get-shortest-and-longest-producer-win-intervals.test.ts`
+Additionally, there are 2 unitary tests:
+- `get-shortest-and-longest-producer-win-intervals.test.ts`: use case corner case tests
+- `Producer.test.ts`: database queries test

@@ -9,5 +9,5 @@ if (!DATABASE_NAME) {
 export const AppDataSource = new DataSource({
     type: 'sqlite',
     database: DATABASE_NAME,
-    entities: [ path.join(__dirname, '../modules/**/models/*.ts')],
+    entities: [ path.join(__dirname, '../modules/**/models/!(*.test).ts')],
 })

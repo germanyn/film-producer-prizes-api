@@ -27,6 +27,23 @@ describe('Movies Module', () => {
         })
     })
 
+    describe('Producer Intervals Summary V2', () => {
+        it('should have a reachable route', async () => {
+            await request(app)
+                .options('/v2/producer-intervals-summary')
+                .expect(200)
+        })
+
+        it('should return correct values', async () => {
+            const response = await request(app)
+                .get('/v2/producer-intervals-summary')
+                .expect('Content-Type', /json/)
+                .expect(200)
+            
+            expect(response.body).toStrictEqual(SAMPLE_RESPONSE_RESULT)
+        })
+    })
+
     afterAll(async () => {
         await AppDataSource.destroy()
     })
