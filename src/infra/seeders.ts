@@ -46,7 +46,7 @@ export async function seedMoviesByCsv() {
                 studios,
                 producersNames,
                 winner,
-            ] = row.split(';')
+            ] = row.replace(/\r$/, '').split(';')
             
             const movieProducers = parseHumanizedListColumn(producersNames)
                 .map(name => {
