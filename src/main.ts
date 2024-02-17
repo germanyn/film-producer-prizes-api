@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import { setupApplication } from "./infra/setup"
 
 const PORT = 6346

@@ -5,3 +5,5 @@ seeds/**
 
 database/**
 !database/.gitkeep
+
+.env

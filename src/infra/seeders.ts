@@ -1,12 +1,14 @@
 import fs from 'node:fs/promises'
-import path from 'node:path'
 import { Movie } from '../modules/movies/models/Movie'
 import { Producer } from '../modules/movies/models/Producer'
 import { AppDataSource } from './database'
 
-const SEED_PATH = path.join('seeds/movielist.csv')
-
 export async function seedMoviesByCsv() {
+    const SEED_PATH = process.env.SEED_PATH
+    if (!SEED_PATH) {
+        throw new Error('No environment variable found for SEED_PATH, please specify a path where the MOVIES.csv file is located.')
+    }
+
     try {
         await Movie.clear()
         await Producer.clear()
