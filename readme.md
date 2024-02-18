@@ -6,6 +6,7 @@ This project showcases a Node.js API with a route to find the slowest and fastes
 - Node.js
 - TypeScript
 - Express
+- REST
 - TypeORM as ORM
 - SQLite as file/in-memory database
 
@@ -19,38 +20,46 @@ This project showcases a Node.js API with a route to find the slowest and fastes
 
 ## Project Setup
 
-After cloning you need to create a `.env` file at the project root, you can use the variables specified at `.env.example`.
+After cloning you need to create a `.env` file at the project root and you can use the content of `.env.example`.
 
-For the database seed you need to have a CSV file similar to `src/test/integration/seeds/movielist.csv`. You can copy the file to `seeds` folder at the root or change `SEED_PATH` as you like. The database will be wiped and rewritten with the seed file every time it starts
+For the database seed, you need to have a CSV import file (similar to `src/test/integration/seeds/movielist.csv`). So copy the file to `seeds` folder at the root or change `SEED_PATH` as you like. Remember that the database will be wiped every time the server starts.
 
 Install the packages using:
-```
+```sh
 npm install
 ```
 
-And develop using one of the commands
+And develop using:
 
-```
+```sh
 npm start
-```
-or for watch mode
-```
+
+# or for watch mode
 npm run dev
 ```
 
 Application will run on `http://localhost:6346`.
 
-You can test the APIs using the extension `humao.rest-client` and running trough the files inside `docs/api`
+You can test the APIs using the extension `humao.rest-client` and running trough the files inside `docs/api`.
+
+Regarding the solution to the problem, I developed two approaches:
+1. `GET /producer-intervals-summary`: utilizes TypeScript
+2. `GET /v2/producer-intervals-summary`: employs TypeORM QueryBuilder
+
+The first approach, while easier to develop, debug, and maintain, is completely decoupled from the DB framework. However, it scales poorly as it brings all DB data into machine's memory and utilizes less SQL optimization from the DB manager.
+
+On the other hand, the second approach, although more challenging and tightly coupled to the database framework, generates a single SQL query that can be optimized by the DB manager. Consequently, it runs significantly faster and avoids bringing all data to machine memory.
+
+I've retained both approaches to showcase proficiency in both plain JS and SQL/framework skills.
 
 ## Testing
 
 You can run the tests using
 
-```
+```sh
 npm run test
-```
-or for watch mode
-```
+
+# or for watch mode
 npm run test -- --watch
 ```
 
