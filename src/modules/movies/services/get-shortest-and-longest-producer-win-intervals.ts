@@ -19,7 +19,7 @@ export async function getShortestAndLongestProducerWinIntervals() {
                 })
         })
 
-    const sortedIntervals = producersIntervals.toSorted((producerA, producerB) => {
+    const sortedIntervals = producersIntervals.slice().sort((producerA, producerB) => {
         return producerA.interval - producerB.interval
     })
 
@@ -41,7 +41,8 @@ export interface ProducerIntervalInformation {
 
 function calculateNeighborMoviesInterval(movies: Movie[]): MovieInterval[] {
     return movies
-        .toSorted((movieA, movieB) => movieA.year - movieB.year)
+        .slice()
+        .sort((movieA, movieB) => movieA.year - movieB.year)
         .reduce<MovieInterval[]>((intervals, movie, index, sortedMovies) => {
             // skips first movie
             if (!index) {
